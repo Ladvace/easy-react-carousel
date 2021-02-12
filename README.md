@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+## easy-react-carousel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br/>
 
-## Available Scripts
+<h1 align="center">
+    <img src="https://media.giphy.com/media/JOPdLZ3tvQY5H1ZqcP/giphy.gif" alt="" width="800"/>
+</h1>
 
-In the project directory, you can run:
+<p align="center">
+ An easy, simple and light react carousel 
+</p>
 
-### `yarn start`
+## Why?
+Bored of installing heavy components full of stuff that you don't need that sometimes are not even made in react ?
+If you are looking for a light carousel component, fully made in react this is the right solution for you
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installation
+### Basic
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+npm i easy-react-carousel
+```
 
-### `yarn test`
+## Usage
+By default, the component does not need anything except for an array of object (slides) passed by the prop ```slides```.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```javascript
+import React from 'react';
+import Carousel from 'test-react-library-component'
 
-### `yarn build`
+const slides = [
+{
+  title: // title ,
+  description: // description,
+  id: // every slide must have a unique id,
+  image: // the image url,
+  url: // this is used to redirect you to the url page when you click on the slide
+},
+{}
+]
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+const Carousel = () => (
+      <Carousel
+        slides={slides}
+      />
+);
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+export default Carousel;
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+## Props
+You can access a clickable demo with many examples and a [live code editor](https://brainhubeu.github.io/react-carousel/) by clicking on a Prop name.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Carousel props
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| **slides** | *Array* | `undefined` | You must pass an array of object with the property you see above |
+| **onChange** | *Function* | `undefined` | Handler triggered when current slide change  |
+| **onClick** | *Array* | `undefined` | Triggered when you click on a slide |
+| **showSelectMenu** | *Boolean* | `true` | Shows or not the corousel "buttons" that allows you to switch between slides |
+| **disableRedirect** | *Boolean* | `true` | By default if the ```url``` property it's present, when you click on a slide you are redirected to that url, you can disable that option setting this to ```false``` |
+| **speed** | *Number* | `5000` | This is the speed of the transition between one slide and another |
+| **rtl** | *Boolean* | `true` | Determines in which direction the slider "slide", if it's true it go from right to left (that's why rtl) otherwise from left to right |
+| **borderRadius** | *Number* | `4px` | This is the border-radius of the carousel |
+| **height** | *Number* | `180px` | The height of the carousel |
+| **alignment** | *String* | `left` | You can change the alignment of the text and description to `left`, `center`, `right` |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Support 💻
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Any Issue, contribution or idea are welcome 😃
 
-## Learn More
+## Donation 💰
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- If you want to support the me consider donating:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WJWDBJENVNGHE)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+or 
 
-### Analyzing the Bundle Size
+[Donate](https://ko-fi.com/ladvace)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Authors ❤️
 
-### Advanced Configuration
+- **Gianmarco Cavallo** (ladvace) - [Github Profile](https://github.com/Ladvace)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### If you have any problems or question open an issue or feel free to contact me! 🔧😃
