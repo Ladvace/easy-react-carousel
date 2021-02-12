@@ -34,9 +34,10 @@ const slides = [
   description: // description,
   id: // every slide must have a unique id,
   image: // the image url,
-  url: // this is used to redirect you to the url page when you click on the slide
+  url: // this is used to redirect to the url page when you click on the slide
 },
-{}
+{},
+// ...
 ]
 
 const Carousel = () => (
@@ -50,7 +51,6 @@ export default Carousel;
 
 
 ## Props
-You can access a clickable demo with many examples and a [live code editor](https://brainhubeu.github.io/react-carousel/) by clicking on a Prop name.
 
 ### Carousel props
 
