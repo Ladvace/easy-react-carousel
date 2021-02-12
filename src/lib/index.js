@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ContentLoader from "react-content-loader";
-import styled, { ThemeContext } from "styled-components";
+import styled from "styled-components";
 
 const Carousel = styled.div`
   width: 1000px;
@@ -129,12 +129,14 @@ const Title = styled.h1`
   margin: 0 0 10px 0;
   line-height: 1;
   z-index: 2;
+  text-align: ${({ alignment }) => alignment};
 `;
 
 const SubTitle = styled.p`
   margin: 0;
   color: #e1e2e4;
   z-index: 2;
+  text-align: ${({ alignment }) => alignment};
 `;
 
 function openNews(e, inf) {
@@ -142,13 +144,15 @@ function openNews(e, inf) {
   window.open(inf.url, "_blank");
 }
 
-function ImageList({ currentImageIndex, slides, disableClick }) {
+function ImageList({ currentImageIndex, slides, disableClick, alignment }) {
   const listImages = slides.map((inf) => {
     return (
       <Slide key={inf.id} onClick={(e) => !disableClick && openNews(e, inf)}>
         <InfoContainer>
-          <Title>{inf.title}</Title>
-          <SubTitle>{inf.description.substring(0, 120) + "..."}</SubTitle>
+          <Title alignment={alignment}>{inf.title}</Title>
+          <SubTitle alignment={alignment}>
+            {inf.description.substring(0, 120) + "..."}
+          </SubTitle>
         </InfoContainer>
         <Gradient />
         <ImageSlide image={inf.image} />
@@ -208,10 +212,10 @@ function CarouselComponent({
   disableClick = false,
   borderRadius,
   height,
-  width,
+  // width,
+  alignment = "left",
 }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const ContextTheme = useContext(ThemeContext);
 
   useInterval(() => {
     if (currentImageIndex < slides.length - 1) {
@@ -230,6 +234,7 @@ function CarouselComponent({
         />
       )}
       <ImageList
+        alignment={alignment}
         disableClick={disableClick}
         slides={slides}
         currentImageIndex={currentImageIndex}
@@ -241,8 +246,8 @@ function CarouselComponent({
       width={1000}
       height={180}
       viewBox="0 0 1000 180"
-      foregroundColor={ContextTheme.palette.grey[900]}
-      backgroundColor={ContextTheme.palette.grey[800]}
+      foregroundColor={"#050818"}
+      backgroundColor={"#121929"}
       title={false}
     >
       <rect width="20" height="180" />
