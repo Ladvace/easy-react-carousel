@@ -14,9 +14,10 @@ const Carousel = styled.div`
 
 const ImageSlider = styled.div`
   display: flex;
+  position: relative;
   flex-direction: row;
-  align-items: stretch;
-  object-fit: covert;
+  object-fit: stretch;
+  object-position: center;
   overflow: hidden;
   border-radius: 4px;
   justify-content: space-between;
@@ -141,13 +142,25 @@ const SubTitle = styled.p`
 
 function openNews(e, inf) {
   e.preventDefault();
-  window.open(inf.url, "_blank");
+  if (inf.url) window.open(inf.url, "_blank");
 }
 
-function ImageList({ currentImageIndex, slides, disableClick, alignment }) {
+function ImageList({
+  currentImageIndex,
+  slides,
+  disableRedirect,
+  alignment,
+  onClick,
+}) {
   const listImages = slides.map((inf) => {
     return (
-      <Slide key={inf.id} onClick={(e) => !disableClick && openNews(e, inf)}>
+      <Slide
+        key={inf.id}
+        onClick={(e) => {
+          if (onClick) onClick(inf);
+          !disableRedirect && openNews(e, inf);
+        }}
+      >
         <InfoContainer>
           <Title alignment={alignment}>{inf.title}</Title>
           <SubTitle alignment={alignment}>
@@ -171,12 +184,15 @@ function ImageList({ currentImageIndex, slides, disableClick, alignment }) {
 }
 
 function SelectNews(props) {
-  const { slides, height } = props;
+  const { slides, height, onChange } = props;
   const { setCurrentImageIndex } = props;
   const selectElementList = slides.map((inf, i) => (
     <SelectElement
       key={inf.id}
-      onClick={() => setCurrentImageIndex(i)}
+      onClick={() => {
+        setCurrentImageIndex(i);
+        if (onChange) onChange(props.currentImageIndex, i);
+      }}
       currentImageIndex={props.currentImageIndex + 1}
     />
   ));
@@ -207,21 +223,36 @@ function useInterval(callback, delay) {
 function CarouselComponent({
   style,
   slides,
-  delay = 5000,
+  speed = 5000,
+  rtl = true,
   showSelectMenu = true,
-  disableClick = false,
+  disableRedirect = false,
   borderRadius,
   height,
   // width,
   alignment = "left",
+  onChange,
+  onClick,
 }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(
+    rtl ? 0 : slides.length - 1
+  );
 
   useInterval(() => {
-    if (currentImageIndex < slides.length - 1) {
-      setCurrentImageIndex(currentImageIndex + 1);
-    } else setCurrentImageIndex(0);
-  }, delay);
+    const isNotLastElement = rtl
+      ? currentImageIndex < slides.length - 1
+      : currentImageIndex > 0;
+
+    if (isNotLastElement) {
+      if (rtl) setCurrentImageIndex(currentImageIndex + 1);
+      else setCurrentImageIndex(currentImageIndex - 1);
+      if (onChange)
+        onChange(
+          currentImageIndex,
+          rtl ? currentImageIndex + 1 : currentImageIndex - 1
+        );
+    } else setCurrentImageIndex(rtl ? 0 : slides.length - 1);
+  }, speed);
 
   return slides.length !== 0 ? (
     <Carousel height={height} borderRadius={borderRadius} style={style}>
@@ -229,13 +260,15 @@ function CarouselComponent({
         <SelectNews
           height={height}
           slides={slides}
+          onChange={onChange}
           setCurrentImageIndex={setCurrentImageIndex}
           currentImageIndex={currentImageIndex}
         />
       )}
       <ImageList
+        onClick={onClick}
         alignment={alignment}
-        disableClick={disableClick}
+        disableRedirect={disableRedirect}
         slides={slides}
         currentImageIndex={currentImageIndex}
       />
@@ -246,8 +279,8 @@ function CarouselComponent({
       width={1000}
       height={180}
       viewBox="0 0 1000 180"
-      foregroundColor={"#050818"}
-      backgroundColor={"#121929"}
+      foregroundColor="#050818"
+      backgroundColor="#121929"
       title={false}
     >
       <rect width="20" height="180" />
