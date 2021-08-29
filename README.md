@@ -70,22 +70,3 @@ export default Carousel;
 ## Support 💻
 
 Any Issue, contribution or idea are welcome 😃
-
-## Donation 💰
-
-- If you want to support the me consider donating:
-
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WJWDBJENVNGHE)
-
-or 
-
-[Donate](https://ko-fi.com/ladvace)
-
-
-
-## Authors ❤️
-
-- **Gianmarco Cavallo** (ladvace) - [Github Profile](https://github.com/Ladvace)
-
-### If you have any problems or question open an issue or feel free to contact me! 🔧😃
