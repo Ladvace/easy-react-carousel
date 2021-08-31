@@ -26,24 +26,23 @@ By default, the component does not need anything except for an array of object (
 
 ```javascript
 import React from 'react';
-import Carousel from 'test-react-library-component'
+import Carousel from 'easy-react-carousel'
 
 const slides = [
-{
-  title: // title ,
-  description: // description,
-  id: // every slide must have a unique id,
-  image: // the image url,
-  url: // this is used to redirect to the url page when you click on the slide
-},
-{},
-// ...
+    {
+      title: // title ,
+      description: // description,
+      id: // every slide must have a unique id,
+      image: // the image url,
+      url: // this is used to redirect to the url page when you click on the slide
+    },
+    // ...
 ]
 
 const Carousel = () => (
-      <Carousel
-        slides={slides}
-      />
+  <Carousel
+    slides={slides}
+  />
 );
 
 export default Carousel;
