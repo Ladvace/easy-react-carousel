@@ -59,6 +59,7 @@ export default Carousel;
 | **onChange** | *Function* | `undefined` | Handler triggered when current slide change  |
 | **onClick** | *Array* | `undefined` | Triggered when you click on a slide |
 | **showSelectMenu** | *Boolean* | `true` | Shows or not the corousel "buttons" that allows you to switch between slides |
+| **showArrows** | *Boolean* | `false` | Shows or not side arrows to navigate in the carousel |
 | **disableRedirect** | *Boolean* | `true` | By default if the ```url``` property it's present, when you click on a slide you are redirected to that url, you can disable that option setting this to ```false``` |
 | **speed** | *Number* | `5000` | This is the speed of the transition between one slide and another |
 | **rtl** | *Boolean* | `true` | Determines in which direction the slider "slide", if it's true it go from right to left (that's why rtl) otherwise from left to right |
