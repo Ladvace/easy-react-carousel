@@ -37,6 +37,7 @@ const ImageSlide = styled("img")`
   height: 100%;
   width: 100%;
   border-radius: 4px;
+  object-fit: cover;
   background-position: center;
   background-size: cover;
   transition: transform 0.2s ease-in-out;
