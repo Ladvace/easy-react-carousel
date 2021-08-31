@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import ContentLoader from "react-content-loader";
-import styled from "styled-components";
+import { styled, setup } from "goober";
+import Arrow from "./Arrow";
 
-const Carousel = styled.div`
-  width: 1000px;
+setup(React.createElement);
+
+const Carousel = styled("div")`
+  width: 100%;
+  position: relative;
   height: ${({ height }) => (height ? `${height}px` : "180px")};
   overflow: hidden;
   border-radius: ${({ borderRadius }) =>
@@ -12,43 +16,39 @@ const Carousel = styled.div`
   display: inline-block;
 `;
 
-const ImageSlider = styled.div`
+const Slider = styled("ul")`
   display: flex;
   position: relative;
-  flex-direction: row;
-  object-fit: stretch;
-  object-position: center;
-  overflow: hidden;
   border-radius: 4px;
-  justify-content: space-between;
   padding: 0;
   margin: 0;
-  margin: 0 auto 0 auto;
-  width: ${({ slidesCount }) => `${slidesCount * 100}%`};
+  width: 100%;
   height: 100%;
   z-index: 0;
-  transform: translate(${({ currentImageIndex }) => `${currentImageIndex}px`});
+  transform: translate3d(
+    ${({ currentImageIndex }) => `${-100 * currentImageIndex}%`},
+    0,
+    0
+  );
   transition: transform 0.3s ease-in-out;
 `;
 
-const ImageSlide = styled.div`
-  position: absolute;
-  top: 0;
+const ImageSlide = styled("img")`
   height: 100%;
   width: 100%;
   border-radius: 4px;
-  background-image: url("${(props) => (props.image ? props.image : null)}");
   background-position: center;
   background-size: cover;
   transition: transform 0.2s ease-in-out;
   z-index: -1;
 `;
 
-const Slide = styled.div`
+const Slide = styled("li")`
   display: inline-block;
   position: relative;
   top: 0;
   width: 100%;
+  min-width: 100%;
   border-radius: 2px;
   z-index: 0;
   &:hover ${ImageSlide} {
@@ -56,7 +56,8 @@ const Slide = styled.div`
   }
 `;
 
-const Gradient = styled.div`
+const Gradient = styled("div")`
+  position: absolute;
   height: 100%;
   width: 100%;
   border-radius: 4px;
@@ -71,7 +72,7 @@ const Gradient = styled.div`
   }
 `;
 
-const Select = styled.div`
+const Select = styled("div")`
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -84,7 +85,7 @@ const Select = styled.div`
   z-index: 2;
 `;
 
-const SelectElement = styled.div`
+const SelectElement = styled("div")`
   width: 16px;
   height: 5px;
   flex: 1;
@@ -118,14 +119,14 @@ const SelectElement = styled.div`
   }
 `;
 
-const InfoContainer = styled.div`
+const InfoContainer = styled("div")`
   position: absolute;
   bottom: 40px;
   left: 15px;
   z-index: 2;
 `;
 
-const Title = styled.h1`
+const Title = styled("h1")`
   color: #e1e2e4;
   margin: 0 0 10px 0;
   line-height: 1;
@@ -133,30 +134,53 @@ const Title = styled.h1`
   text-align: ${({ alignment }) => alignment};
 `;
 
-const SubTitle = styled.p`
+const SubTitle = styled("p")`
   margin: 0;
   color: #e1e2e4;
   z-index: 2;
   text-align: ${({ alignment }) => alignment};
 `;
 
-function openNews(e, inf) {
+const uuid4 = () => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    let r = (Math.random() * 16) | 0;
+    let v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+const rotate = (rotation, currentImageIndex, slides, setCurrentImageIndex) => {
+  const rtl = rotation === "right";
+
+  const isNotLastElement = rtl
+    ? currentImageIndex < slides.length - 1
+    : currentImageIndex > 0;
+
+  if (isNotLastElement) {
+    if (rtl) setCurrentImageIndex(currentImageIndex + 1);
+    else setCurrentImageIndex(currentImageIndex - 1);
+  } else setCurrentImageIndex(rtl ? 0 : slides.length - 1);
+};
+
+const openNews = (e, inf) => {
   e.preventDefault();
   if (inf.url) window.open(inf.url, "_blank");
-}
+};
 
-function ImageList({
+const ImageList = ({
   currentImageIndex,
   slides,
   disableRedirect,
   alignment,
   onClick,
-}) {
+}) => {
   const listImages = slides.map((inf) => {
     return (
       <Slide
-        key={inf.id}
+        key={uuid4()}
         onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
           if (onClick) onClick(inf);
           !disableRedirect && openNews(e, inf);
         }}
@@ -168,39 +192,36 @@ function ImageList({
           </SubTitle>
         </InfoContainer>
         <Gradient />
-        <ImageSlide image={inf.image} />
+        <ImageSlide src={inf.image} loading="lazy" alt="" />
       </Slide>
     );
   });
 
-  return (
-    <ImageSlider
-      slidesCount={slides.length}
-      currentImageIndex={-1000 * currentImageIndex}
-    >
-      {listImages}
-    </ImageSlider>
-  );
-}
+  return <Slider currentImageIndex={currentImageIndex}>{listImages}</Slider>;
+};
 
-function SelectNews(props) {
-  const { slides, height, onChange } = props;
-  const { setCurrentImageIndex } = props;
+const SelectNews = ({
+  slides,
+  height,
+  onChange,
+  setCurrentImageIndex,
+  currentImageIndex,
+}) => {
   const selectElementList = slides.map((inf, i) => (
     <SelectElement
-      key={inf.id}
+      key={uuid4()}
       onClick={() => {
         setCurrentImageIndex(i);
-        if (onChange) onChange(props.currentImageIndex, i);
+        if (onChange) onChange(currentImageIndex, i);
       }}
-      currentImageIndex={props.currentImageIndex + 1}
+      currentImageIndex={currentImageIndex + 1}
     />
   ));
 
   return <Select height={height}>{selectElementList}</Select>;
-}
+};
 
-function useInterval(callback, delay) {
+const useInterval = (callback, delay) => {
   const savedCallback = useRef();
 
   // Remember the latest function.
@@ -210,21 +231,23 @@ function useInterval(callback, delay) {
 
   // Set up the interval.
   useEffect(() => {
-    function tick() {
+    const tick = () => {
       savedCallback.current();
-    }
+    };
     if (delay !== null) {
       const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
   }, [delay]);
-}
+};
 
-function CarouselComponent({
+const CarouselComponent = ({
   style,
   slides,
   speed = 5000,
   rtl = true,
+  disableAutoRotation,
+  showArrows,
   showSelectMenu = true,
   disableRedirect = false,
   borderRadius,
@@ -233,29 +256,64 @@ function CarouselComponent({
   alignment = "left",
   onChange,
   onClick,
-}) {
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(
     rtl ? 0 : slides.length - 1
   );
 
   useInterval(() => {
-    const isNotLastElement = rtl
-      ? currentImageIndex < slides.length - 1
-      : currentImageIndex > 0;
+    if (!disableAutoRotation) {
+      const isNotLastElement = rtl
+        ? currentImageIndex < slides.length - 1
+        : currentImageIndex > 0;
 
-    if (isNotLastElement) {
-      if (rtl) setCurrentImageIndex(currentImageIndex + 1);
-      else setCurrentImageIndex(currentImageIndex - 1);
-      if (onChange)
-        onChange(
-          currentImageIndex,
-          rtl ? currentImageIndex + 1 : currentImageIndex - 1
-        );
-    } else setCurrentImageIndex(rtl ? 0 : slides.length - 1);
+      if (isNotLastElement) {
+        if (rtl) setCurrentImageIndex(currentImageIndex + 1);
+        else setCurrentImageIndex(currentImageIndex - 1);
+        if (onChange)
+          onChange(
+            currentImageIndex,
+            rtl ? currentImageIndex + 1 : currentImageIndex - 1
+          );
+      } else setCurrentImageIndex(rtl ? 0 : slides.length - 1);
+    }
   }, speed);
 
   return slides.length !== 0 ? (
     <Carousel height={height} borderRadius={borderRadius} style={style}>
+      {showArrows && (
+        <>
+          <Arrow
+            onClick={() => {
+              rotate("left", currentImageIndex, slides, setCurrentImageIndex);
+            }}
+            style={{
+              position: "absolute",
+              color: "white",
+              width: 50,
+              top: "50%",
+              transform: "translateY(-50%)",
+              left: 50,
+              zIndex: 3,
+            }}
+          />
+          <Arrow
+            onClick={() => {
+              rotate("right", currentImageIndex, slides, setCurrentImageIndex);
+            }}
+            right
+            style={{
+              position: "absolute",
+              color: "white",
+              width: 50,
+              top: "50%",
+              transform: "translateY(-50%)",
+              right: 50,
+              zIndex: 3,
+            }}
+          />
+        </>
+      )}
       {showSelectMenu && (
         <SelectNews
           height={height}
@@ -304,6 +362,6 @@ function CarouselComponent({
       <rect x="40.5" y="125.6" width="304" height="14.4" />
     </ContentLoader>
   );
-}
+};
 
 export default CarouselComponent;
