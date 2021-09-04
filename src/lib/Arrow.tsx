@@ -1,6 +1,10 @@
 import React from "react";
 
-const Arrow = ({ right, style, onClick }) => {
+const Arrow: React.FC<{ right?: boolean, style: any, onClick: any }> = ({
+  right,
+  style,
+  onClick,
+}) => {
   return right ? (
     <svg
       onClick={onClick}

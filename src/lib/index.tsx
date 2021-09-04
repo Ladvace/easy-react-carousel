@@ -5,7 +5,65 @@ import Arrow from "./Arrow";
 
 setup(React.createElement);
 
-const Carousel = styled("div")`
+interface slideProps {
+  image: string;
+  title: string;
+  description: string;
+  url?: string;
+}
+
+interface sliderProps {
+  currentImageIndex: number;
+  slides: slideProps[];
+  disableRedirect?: boolean;
+  alignment?: string;
+  onClick: any;
+}
+
+interface selectNewsProps {
+  slides: slideProps[];
+  height?: number;
+  onChange?: any;
+  setCurrentImageIndex: any;
+  currentImageIndex: number;
+}
+
+interface carouselProps {
+  style?: any;
+  slides: slideProps[];
+  speed?: number;
+  rtl?: boolean;
+  disableAutoRotation?: boolean;
+  showArrows?: boolean;
+  showSelectMenu?: boolean;
+  disableRedirect?: boolean;
+  borderRadius?: number;
+  height?: number;
+  // width,
+  alignment?: string;
+  onChange?: any;
+  onClick?: any;
+}
+
+type CarouselStyleProps = {
+  height?: number;
+  borderRadius?: number;
+  style: any;
+};
+
+type SliderStyleProps = {
+  currentImageIndex?: number;
+};
+
+type SelecttyleProps = {
+  height?: number;
+};
+
+type TitleProps = {
+  alignment?: string;
+};
+
+const Carousel = styled("div")<CarouselStyleProps>`
   width: 100%;
   position: relative;
   height: ${({ height }) => (height ? `${height}px` : "180px")};
@@ -16,7 +74,7 @@ const Carousel = styled("div")`
   display: inline-block;
 `;
 
-const Slider = styled("ul")`
+const Slider = styled("ul")<SliderStyleProps>`
   display: flex;
   position: relative;
   border-radius: 4px;
@@ -26,7 +84,7 @@ const Slider = styled("ul")`
   height: 100%;
   z-index: 0;
   transform: translate3d(
-    ${({ currentImageIndex }) => `${-100 * currentImageIndex}%`},
+    ${({ currentImageIndex }) => `${-100 * (currentImageIndex || 0)}%`},
     0,
     0
   );
@@ -53,7 +111,7 @@ const Slide = styled("li")`
   border-radius: 2px;
   z-index: 0;
   &:hover ${ImageSlide} {
-    transform: scale(1.06);
+    transform: scale(1.02);
   }
 `;
 
@@ -73,7 +131,7 @@ const Gradient = styled("div")`
   }
 `;
 
-const Select = styled("div")`
+const Select = styled("div")<SelecttyleProps>`
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -86,7 +144,7 @@ const Select = styled("div")`
   z-index: 2;
 `;
 
-const SelectElement = styled("div")`
+const SelectElement = styled("div")<SliderStyleProps>`
   width: 16px;
   height: 5px;
   flex: 1;
@@ -111,7 +169,7 @@ const SelectElement = styled("div")`
     vertical-align: middle;
   }
 
-  &:nth-child(${(props) => props.currentImageIndex}) {
+  &:nth-child(${({ currentImageIndex }) => currentImageIndex}) {
     margin: 0 2px 0 2px;
     flex-grow: 2;
     background: #b7c5c8;
@@ -127,7 +185,7 @@ const InfoContainer = styled("div")`
   z-index: 2;
 `;
 
-const Title = styled("h1")`
+const Title = styled("h1")<TitleProps>`
   color: #e1e2e4;
   margin: 0 0 10px 0;
   line-height: 1;
@@ -135,7 +193,7 @@ const Title = styled("h1")`
   text-align: ${({ alignment }) => alignment};
 `;
 
-const SubTitle = styled("p")`
+const SubTitle = styled("p")<TitleProps>`
   margin: 0;
   color: #e1e2e4;
   z-index: 2;
@@ -150,7 +208,12 @@ const uuid4 = () => {
   });
 };
 
-const rotate = (rotation, currentImageIndex, slides, setCurrentImageIndex) => {
+const rotate = (
+  rotation: string,
+  currentImageIndex: number,
+  slides: slideProps[],
+  setCurrentImageIndex: any
+) => {
   const rtl = rotation === "right";
 
   const isNotLastElement = rtl
@@ -163,12 +226,12 @@ const rotate = (rotation, currentImageIndex, slides, setCurrentImageIndex) => {
   } else setCurrentImageIndex(rtl ? 0 : slides.length - 1);
 };
 
-const openNews = (e, inf) => {
+const openNews = (e: React.MouseEvent<HTMLElement>, inf: slideProps) => {
   e.preventDefault();
   if (inf.url) window.open(inf.url, "_blank");
 };
 
-const ImageList = ({
+const ImageList: React.FC<sliderProps> = ({
   currentImageIndex,
   slides,
   disableRedirect,
@@ -201,14 +264,14 @@ const ImageList = ({
   return <Slider currentImageIndex={currentImageIndex}>{listImages}</Slider>;
 };
 
-const SelectNews = ({
+const SelectNews: React.FC<selectNewsProps> = ({
   slides,
   height,
   onChange,
   setCurrentImageIndex,
   currentImageIndex,
 }) => {
-  const selectElementList = slides.map((inf, i) => (
+  const selectElementList = slides.map((_, i) => (
     <SelectElement
       key={uuid4()}
       onClick={() => {
@@ -222,8 +285,8 @@ const SelectNews = ({
   return <Select height={height}>{selectElementList}</Select>;
 };
 
-const useInterval = (callback, delay) => {
-  const savedCallback = useRef();
+const useInterval = (callback: any, delay: number) => {
+  const savedCallback = useRef<any>();
 
   // Remember the latest function.
   useEffect(() => {
@@ -242,7 +305,7 @@ const useInterval = (callback, delay) => {
   }, [delay]);
 };
 
-const CarouselComponent = ({
+const CarouselComponent: React.FC<carouselProps> = ({
   style,
   slides,
   speed = 5000,
@@ -340,7 +403,7 @@ const CarouselComponent = ({
       viewBox="0 0 1000 180"
       foregroundColor="#050818"
       backgroundColor="#121929"
-      title={false}
+      // title={false}
     >
       <rect width="20" height="180" />
       <rect x="980" width="20" height="180" />
